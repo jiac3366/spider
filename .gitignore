@@ -1,0 +1,9 @@
+*.vscode
+*.pyc
+*.db
+venv
+/.idea
+*.log
+__pycache__
+*.py[cod]
+*$py.class
