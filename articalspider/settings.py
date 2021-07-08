@@ -26,7 +26,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 10
 RANDOMIZE_DOWNLOAD_DELAY = True  # 使得DOWNLOAD_DELAY在{0.5~1.5倍之间随机}
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -56,8 +56,8 @@ COOKIES_DEGUB = True  #
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'articalspider.middlewares.RandomUserAgentMiddlware': 1,
-    # 'articalspider.middlewares.RandomProxyMiddleware': 2,
-    # 'articalspider.middlewares.JSPageMiddleware': 3,
+    # 'articalspider.middlewares.RandomProxyMiddleware': 2, # 代理ip
+    # 'articalspider.middlewares.JSPageMiddleware': 3, # selenium集成
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None
 }
 RANDOM_UA_TYPE = 'random'
@@ -78,7 +78,12 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'articalspider'))
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'articalspider.pipelines.ArticalspiderPipeline': 300,  # 数值设置管道执行的先后顺序 数值越小 优先级越高
+    # 'scrapy.pipelines.images.ImagesPipeline': 1,
+    'articalspider.pipelines.ArticalImagePipeline': 1,  # 图片下载
+    # 'articalspider.pipelines.JsonWithEncodingPipeline': 2,  # 保存成json文件
+    # 'articalspider.pipelines.MysqlPipeline': 3,  # 保存到mysql数据库
+    'articalspider.pipelines.MysqlTwistedPipline': 3,  # 异步保存到mysql数据库，还可以对不同的爬虫入库解耦
+    # 'articalspider.pipelines.ArticalspiderPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -102,9 +107,16 @@ AUTOTHROTTLE_ENABLED = True  # DOWNLOAD_DELAY = 3秒 -->3秒下载一次
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+IMAGES_URLS_FIELD = "front_image_url"
+IMAGES_STORE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
 
-# if __name__ == '__main__':
-#     # os.path中有dirname、abspath、join
-#     print(BASE_DIR)
-#     # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#     # print(os.path.join(BASE_DIR, 'articalspider'))
+MYSQL_HOST = "127.0.0.1"
+MYSQL_DBNAME = "article_spider"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "123456"
+
+if __name__ == '__main__':
+    print(IMAGES_STORE)
+# os.path中有dirname、abspath、join
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# print(os.path.join(BASE_DIR, 'articalspider'))

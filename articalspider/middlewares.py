@@ -6,6 +6,8 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+
+
 # from fake_useragent import UserAgent
 # from tools.proxy_ip import GetIp
 
@@ -125,7 +127,8 @@ class RandomUserAgentMiddlware(object):
         #     return getattr(self.ua, self.ua_type)
         # ip = get_ua()
         # get_ua()默认等价于self.ua.random
-        request.headers.setdefault('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+        request.headers.setdefault('User-Agent',
+                                   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
         # get_ip = GetIp()
         # ip = get_ip.get_random_ip()
         # # if ip:
@@ -139,6 +142,7 @@ class RandomProxyMiddleware(object):
         ip = get_ip.get_random_ip()
         if ip:
             request.meta["proxy"] = ip
+
 
 from selenium import webdriver
 from scrapy.http import HtmlResponse
